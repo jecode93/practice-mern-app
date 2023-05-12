@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const personalRoutes = require("./routes/route");
 
@@ -10,6 +11,6 @@ app.use((req, res, next) => {
 
 app.use("/api/personals", personalRoutes)
 
-app.listen(3000, (req, res) => {
-    console.log("App listen on port 3000");
+app.listen(process.env.PORT, (req, res) => {
+    console.log(`App listen on port ${process.env.PORT}`);
 })
