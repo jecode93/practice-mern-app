@@ -1,41 +1,21 @@
 const express = require("express");
+const { getPersonals, getPersonal, postPersonal, updatePersonal, deletePersonal } = require("../controllers/routeController");
 
 const router = express.Router();
 
-// All personal
-router.get("/", (req, res) => {
-    res.json({
-        Msg: "GET all personal"
-    });
-})
+// All personals
+router.get("/", getPersonals)
 
 //Single personal
-router.get("/:id", (req, res) => {
-    const { id } = req.params;
-    res.json({
-        Msg: `GET ${id} personal`
-    });
-})
+router.get("/:id", getPersonal)
 
+// Post a new personal
+router.post("/", postPersonal)
 
-router.post("/", (req, res) => {
-    res.json({
-        Msg: "Post a personal"
-    });
-})
+//Update a personal
+router.patch("/:id", updatePersonal)
 
-router.patch("/:id", (req, res) => {
-    const { id } = req.params;
-    res.json({
-        Msg: `Update ${id} personal`
-    });
-})
-
-router.delete("/:id", (req, res) => {
-    const { id } = req.params;
-    res.json({
-        Msg: `Delete ${id} personal`
-    });
-})
+//Delete a personal
+router.delete("/:id", deletePersonal)
 
 module.exports = router;
