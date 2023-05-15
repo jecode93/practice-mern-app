@@ -1,34 +1,77 @@
-const getPersonals = (req, res) => {
-    res.json({
-        Msg: "GET all personals"
-    });
+const Personal = require("../models/personaleModel");
+const mongoose = require("mongoose")
+
+
+//Get all personals
+const getPersonals = async (req, res) => {
+    const personals = await Personal.find({}).sort({ createdAt: -1 });
+    res.status(200).json(personals);
 }
 
-const getPersonal = (req, res) => {
+//Get a personal
+const getPersonal = async (req, res) => {
     const { id } = req.params;
-    res.json({
-        Msg: `GET ${id} personal`
-    });
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({
+            error: "No such personal"
+        })
+    }
+    const personal = await Personal.findById(id);
+    if (!personal) {
+        res.status(404).json({
+            error: "No such personal"
+        })
+    }
+    res.status(200).json(personal);
 }
 
-const postPersonal = (req, res) => {
-    res.json({
-        Msg: "Post a personal"
-    });
+//Create a new personal
+const postPersonal = async (req, res) => {
+    const { firstName, lastName, age } = req.body;
+    try {
+        const newPersonal = await Personal.create({ firstName, lastName, age });
+        res.status(200).json(newPersonal);
+    } catch (error) {
+        res.status(400).json({
+            error: error.message
+        })
+    }
 }
 
-const updatePersonal = (req, res) => {
+//Update a personal
+const updatePersonal = async (req, res) => {
     const { id } = req.params;
-    res.json({
-        Msg: `Update ${id} personal`
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({
+            error: "No such personal"
+        })
+    }
+    const personal = await Personal.findOneAndUpdate({ _id: id }, {
+        ...req.body
     });
+    if (!personal) {
+        res.status(404).json({
+            error: "No such personal"
+        })
+    }
+    res.status(200).json(personal);
 }
 
-const deletePersonal = (req, res) => {
+//Delete a personal
+const deletePersonal = async (req, res) => {
     const { id } = req.params;
-    res.json({
-        Msg: `Delete ${id} personal`
-    });
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({
+            error: "No such personal found"
+        })
+    }
+    const personal = await Personal.findOneAndDelete({ _id: id })
+    if (!personal) {
+        res.status(404).json({
+            error: "No such personal"
+        })
+    }
+    res.status(200).json(personal);
 }
 
 
